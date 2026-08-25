@@ -104,6 +104,24 @@ Kreirana su dva značajna nova atributa:
 `ActiveServices` se pokazao kao koristan prediktor, naročito kod modela zasnovanih na stablima.
 
 ---
+### Provera multikolinearnosti
+
+Nakon uočene visoke Spearman korelacije između `tenure` i `TotalCharges`
+(~0.89), sprovedena je formalna provera pomoću **VIF (Variance Inflation
+Factor)** analize. Rezultati su pokazali:
+
+- `tenure`: VIF ≈ 6.4 (umerena multikolinearnost)
+- `MonthlyCharges`: VIF ≈ 3.4 (bez problema)
+- `TotalCharges`: VIF ≈ 8.2 (umerena multikolinearnost)
+- `TenureGroup`: VIF > 20 (visoka multikolinearnost sa `tenure`)
+
+Na osnovu ovoga doneta je odluka:
+
+- **Za linearne modele** (Logistička regresija): izbacuju se `TotalCharges`
+  i `TenureGroup` pre treniranja, radi stabilnijih koeficijenata i lakše
+  interpretacije.
+- **Za modele bazirane na stablima** (Random Forest, XGBoost): zadržavaju
+  se sve kolone jer stabla ne pate od multikolinearnosti.
 
 ## Eksplorativna analiza i statističko testiranje
 
@@ -118,6 +136,24 @@ Za kategorijske promenljive u odnosu na `Churn` korišćen je:
 - **Hi-kvadrat test nezavisnosti**
 
 Analiza je pokazala statistički značajne veze između churn-a i više karakteristika korisnika.
+
+### Multivarijantna analiza
+
+Pored bivarijantne analize svake promenljive u odnosu na `Churn`, sprovedena
+je i multivarijantna analiza kroz tri prikaza:
+
+- **Heatmap `Contract × TenureGroup` vs Churn %** — pokazuje da kombinacija
+  `Month-to-month` ugovora sa kratkim stažom (0-12 meseci) daje churn
+  oko 55%, dok ista dužina staža sa `Two year` ugovorom daje ispod 5%.
+- **Grouped bar `Contract × InternetService`** — otkriva da najveći
+  churn imaju korisnici sa Fiber optic internetom na Month-to-month
+  ugovoru (~55%).
+- **Scatter `MonthlyCharges vs tenure` obojeno po Churn** — jasno se
+  izdvaja "high-risk zona": novi korisnici (< 20 meseci) sa visokim
+  mesečnim troškovima (> 70$).
+
+Ključan zaključak: efekti atributa se **kombinuju multiplikativno**, ne
+aditivno. Ovi obrasci se ne mogu videti u bivarijantnoj analizi.
 
 ### Najvažniji nalazi
 
