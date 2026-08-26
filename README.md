@@ -110,7 +110,7 @@ Nakon uočene visoke Spearman korelacije između `tenure` i `TotalCharges`
 (~0.89), sprovedena je formalna provera pomoću **VIF (Variance Inflation
 Factor)** analize. Rezultati su pokazali:
 
-- `tenure`: VIF ≈ 6.4 (umerena multikolinearnost)
+- `tenure`: VIF ≈ 41.5 (umerena multikolinearnost)
 - `MonthlyCharges`: VIF ≈ 3.4 (bez problema)
 - `TotalCharges`: VIF ≈ 8.2 (umerena multikolinearnost)
 - `TenureGroup`: VIF > 20 (visoka multikolinearnost sa `tenure`)
